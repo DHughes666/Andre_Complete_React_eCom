@@ -29,12 +29,12 @@ export const signInWithGoogleRedirect = () => signInWithRedirect(auth, googlePro
 
 export const ecomDB = getFirestore();
 
-export const createUserDocumentFromAuth = async (userAuth) => {
+export const createUserDocumentFromAuth = async (userAuth, extraInfo) => {
+    if(!userAuth) return;
+
     const userDocRef = doc(ecomDB, 'users', userAuth.uid);
 
-
     const userSnapshot = await getDoc(userDocRef);
-    console.log(userSnapshot.exists());
 
     //if user data does not exist
     //create or set the document with the data from userAuth in my collection
@@ -44,7 +44,7 @@ export const createUserDocumentFromAuth = async (userAuth) => {
 
         try {
             await setDoc(userDocRef, {
-                displayName, email, createdAt
+                displayName, email, createdAt, ...extraInfo
             });
         } catch(err) {
             console.log('error creating the user', err.message);
