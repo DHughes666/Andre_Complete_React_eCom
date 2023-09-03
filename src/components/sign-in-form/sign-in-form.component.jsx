@@ -29,15 +29,22 @@ const SignInForm = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-
         try {
-            const response = await signInAuthWithEmailAndPassword(email, password);
+            const response = await signInAuthWithEmailAndPassword(
+                email, password);
             console.log(response);
-            resetFormFields();
-            
-          
+            resetFormFields();          
         } catch (error) {
-            
+            switch (error.code) {
+                case 'auth/wrong-password':
+                    alert('Incorrect password');
+                    break;
+                case 'auth/user-not-found':
+                    alert('User not found');
+                    break;
+                default:
+                    console.log(error);
+            }
         }
         
     }
@@ -76,7 +83,8 @@ const SignInForm = () => {
 
             <div className='buttons-container'>
                 <Button type='submit'>Sign In</Button>
-                <Button buttonType='google' onClick={signInWithGoogle}>Google sign in</Button>
+                <Button buttonType='google' type='button'
+                onClick={signInWithGoogle}>Google sign in</Button>
             </div>
             
         </form>
