@@ -1,7 +1,12 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithRedirect, signInWithEmailAndPassword,
-        signInWithPopup, createUserWithEmailAndPassword,
-        GoogleAuthProvider } from 'firebase/auth';
+import { getAuth, signInWithRedirect, 
+        signInWithEmailAndPassword,
+        signInWithPopup, 
+        createUserWithEmailAndPassword,
+        GoogleAuthProvider,
+        signOut,
+        onAuthStateChanged
+    } from 'firebase/auth';
 
 import { getFirestore, doc, getDoc, 
         setDoc } from 'firebase/firestore';
@@ -24,8 +29,10 @@ googleProvider.setCustomParameters({
 });
 
 export const auth = getAuth();
-export const signInWithGooglePopup = () => signInWithPopup(auth, googleProvider);
-export const signInWithGoogleRedirect = () => signInWithRedirect(auth, googleProvider);
+export const signInWithGooglePopup = () => signInWithPopup(auth, 
+    googleProvider);
+export const signInWithGoogleRedirect = () => signInWithRedirect(auth, 
+    googleProvider);
 
 export const ecomDB = getFirestore();
 
@@ -66,3 +73,8 @@ export const signInAuthWithEmailAndPassword = async (email, password) => {
 
     return await signInWithEmailAndPassword(auth, email, password);
 };
+
+export const signOutUser = () => signOut(auth);
+
+export const onAuthStateChangedListener = (callback) => onAuthStateChanged(
+    auth, callback);
