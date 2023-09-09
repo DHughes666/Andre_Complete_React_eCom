@@ -9,7 +9,7 @@ import { getAuth, signInWithRedirect,
     } from 'firebase/auth';
 
 import { getFirestore, doc, getDoc, 
-        setDoc } from 'firebase/firestore';
+        setDoc, collection, writeBatch } from 'firebase/firestore';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -35,6 +35,19 @@ export const signInWithGoogleRedirect = () => signInWithRedirect(auth,
     googleProvider);
 
 export const ecomDB = getFirestore();
+
+export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
+    const collectionRef = collection(ecomDB, collectionKey);
+    const batch = writeBatch(ecomDB);
+
+    objectsToAdd.forEach((object) => {
+        const docRef = doc(collectionRef, object.title.toLowerCase());
+        batch.set(docRef, object);
+    });
+
+    await batch.commit();
+     
+}
 
 export const createUserDocumentFromAuth = async (userAuth, extraInfo) => {
     if(!userAuth) return;
